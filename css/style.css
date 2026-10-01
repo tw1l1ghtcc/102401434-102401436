@@ -693,3 +693,153 @@ textarea.input {
   color: var(--primary);
   font-weight: 600;
 }
+/* ------------------------------- 轻量交互动画 ------------------------------- */
+
+/* 页面切换：淡入并轻微上移 */
+.view:not([hidden]) {
+  animation: view-enter 0.22s ease-out;
+}
+
+/* 卡片出现和交互反馈 */
+.card {
+  animation: card-enter 0.28s ease-out;
+}
+
+.card--tappable {
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.card--tappable:active {
+  transform: scale(0.985);
+}
+
+/* 按钮、分类标签和导航按钮的点击反馈 */
+.btn,
+.chip,
+.back,
+.search-entry,
+.type-switch button,
+.upload-box,
+.bottom-nav button {
+  transition:
+    transform 0.15s ease,
+    color 0.18s ease,
+    background-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.btn:active:not(:disabled),
+.chip:active,
+.back:active,
+.search-entry:active,
+.type-switch button:active,
+.upload-box:active,
+.bottom-nav button:active {
+  transform: scale(0.97);
+}
+
+/* 输入框获得焦点时增加轻微高亮 */
+.input,
+.search-row input {
+  transition:
+    background-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.input:focus,
+.search-row input:focus {
+  box-shadow: 0 0 0 3px rgb(59 123 246 / 14%);
+}
+
+/* Toast提示从底部滑入 */
+.toast:not([hidden]) {
+  animation: toast-enter 0.24s ease-out;
+}
+
+/* 发布成功图标弹出 */
+.view--success:not([hidden]) .success-icon {
+  animation: success-pop 0.38s cubic-bezier(0.2, 0.9, 0.3, 1.35);
+}
+
+/* 支持鼠标悬停的设备才启用悬停效果 */
+@media (hover: hover) {
+  .card--tappable:hover {
+    border-color: rgb(59 123 246 / 22%);
+    box-shadow: 0 8px 22px rgb(31 41 55 / 12%);
+    transform: translateY(-3px);
+  }
+
+  .btn:hover:not(:disabled),
+  .chip:hover,
+  .bottom-nav button:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes view-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes success-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+
+  70% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 尊重系统“减少动态效果”设置 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
