@@ -1,0 +1,21 @@
+{
+  "name": "campus-lost-found-unit-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "校园失物招领：Jest 单元测试（隔离目录，被测源码见 js/）",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jsdom": "^22.1.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "verbose": true
+  }
+}

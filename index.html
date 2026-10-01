@@ -6,91 +6,202 @@
   <title>校园失物招领</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body data-nav="off">
   <div class="app">
-    <header>
-      <h1>校园失物招领</h1>
-      <p>让每一件遗失物品更快回家</p>
-    </header>
+    <main id="main">
+      <!-- ============ 视图：01-首页（标题 / 搜索框 / 寻物·招领标签 / 五个分类入口 / 信息卡片） ============ -->
+      <section id="view-home" class="view" data-view="home" hidden>
+        <h1 class="page-title">校园失物招领</h1>
 
-    <main>
-      <div class="search-box">
-        <input type="search" placeholder="搜索物品名称">
-        <button type="button">搜索</button>
-      </div>
+        <button type="button" id="home-search-entry" class="search-entry">搜索物品名称</button>
 
-      <div class="type-tabs">
-        <button class="active">全部</button>
-        <button>寻物</button>
-        <button>招领</button>
-      </div>
+        <div id="home-type-tabs" class="segmented" data-active="lost" role="group" aria-label="信息类型">
+          <span class="segmented__thumb" aria-hidden="true"></span>
+          <button type="button" class="active" data-type="lost" aria-pressed="true">寻物信息</button>
+          <button type="button" data-type="found" aria-pressed="false">招领信息</button>
+        </div>
 
-      <div class="filter-row">
-        <label for="category">物品分类：</label>
-        <select id="category">
-          <option>全部分类</option>
-          <option>校园卡</option>
-          <option>钥匙</option>
-          <option>电子产品</option>
-          <option>生活用品</option>
-          <option>其他</option>
-        </select>
-      </div>
+        <div id="home-category-chips" class="chip-row" role="group" aria-label="按分类查看">
+          <button type="button" class="chip chip--quick" data-category="校园卡">校园卡</button>
+          <button type="button" class="chip chip--quick" data-category="钥匙">钥匙</button>
+          <button type="button" class="chip chip--quick" data-category="电子产品">电子产品</button>
+          <button type="button" class="chip chip--quick" data-category="书籍">书籍</button>
+          <button type="button" class="chip chip--quick" data-category="生活用品">生活用品</button>
+          <button type="button" class="chip chip--quick" data-category="其他">其他</button>
+        </div>
 
-      <section>
-        <h2>最新信息</h2>
-        <div id="item-list" class="item-list"></div>
+        <div id="item-list" class="card-list"></div>
+      </section>
+
+      <!-- ============ 视图：02-搜索页（返回 + 标题 + 输入框 + 搜索按钮 + 类型/分类筛选项） ============ -->
+      <section id="view-search" class="view" data-view="search" hidden>
+        <div class="screen-bar">
+          <button type="button" class="back" data-action="back"><span aria-hidden="true">&lt;</span> 返回</button>
+          <h2 class="screen-title">搜索物品</h2>
+        </div>
+
+        <form id="search-form" class="search-row">
+          <label class="sr-only" for="search-keyword">输入物品名称</label>
+          <input id="search-keyword" type="search" placeholder="输入物品名称，例如校园卡" autocomplete="off">
+          <button type="submit" class="btn btn-primary">搜索</button>
+        </form>
+
+        <p class="field-label">信息类型：</p>
+        <div id="search-type-chips" class="chip-row" role="group" aria-label="信息类型筛选">
+          <button type="button" class="chip active" data-type="all" aria-pressed="true">全部</button>
+          <button type="button" class="chip" data-type="lost" aria-pressed="false">寻物</button>
+          <button type="button" class="chip" data-type="found" aria-pressed="false">招领</button>
+        </div>
+
+        <p class="field-label">物品分类：</p>
+        <div id="search-category-chips" class="chip-row" role="group" aria-label="物品分类筛选">
+          <button type="button" class="chip" data-category="校园卡">校园卡</button>
+          <button type="button" class="chip" data-category="钥匙">钥匙</button>
+          <button type="button" class="chip" data-category="电子产品">电子产品</button>
+          <button type="button" class="chip" data-category="书籍">书籍</button>
+          <button type="button" class="chip" data-category="生活用品">生活用品</button>
+          <button type="button" class="chip" data-category="其他">其他</button>
+        </div>
+      </section>
+
+      <!-- ============ 视图：03-搜索结果页（返回 + 「xx」的搜索结果 + 条数 + 结果卡片） ============ -->
+      <section id="view-results" class="view" data-view="results" hidden>
+        <div class="screen-bar">
+          <button type="button" class="back" data-action="back"><span aria-hidden="true">&lt;</span> 返回</button>
+          <h2 class="screen-title" id="results-title">搜索结果</h2>
+        </div>
+
+        <p id="results-count" class="result-count" aria-live="polite"></p>
+        <div id="results-list" class="card-list"></div>
+      </section>
+
+      <!-- ============ 视图：04/08/09-信息详情页（返回 + 图片 + 类型状态 + 字段 + 复制联系方式） ============ -->
+      <section id="view-detail" class="view" data-view="detail" hidden>
+        <div class="screen-bar">
+          <button type="button" class="back" data-action="back"><span aria-hidden="true">&lt;</span> 返回</button>
+          <h2 class="screen-title">物品详情</h2>
+        </div>
+
+        <div class="detail-image">
+          <img id="detail-image" alt="" hidden>
+          <span id="detail-image-text"></span>
+        </div>
+
+        <p id="detail-type-label" class="detail-type"></p>
+
+        <dl class="detail-rows">
+          <div class="detail-row detail-row--strong">
+            <dt>物品名称：</dt>
+            <dd id="detail-name"></dd>
+          </div>
+          <div class="detail-row">
+            <dt id="detail-location-label">拾取地点：</dt>
+            <dd id="detail-location"></dd>
+          </div>
+          <div class="detail-row">
+            <dt id="detail-date-label">拾取日期：</dt>
+            <dd id="detail-date"></dd>
+          </div>
+        </dl>
+
+        <p class="detail-label">物品描述：</p>
+        <p id="detail-description" class="detail-desc"></p>
+
+        <p class="detail-label">联系方式：</p>
+        <p id="detail-contact" class="detail-contact"></p>
+
+        <button type="button" id="copy-contact" class="btn btn-primary btn-block">复制联系方式</button>
+      </section>
+
+      <!-- ============ 视图：05-发布信息页（返回 + 发布寻物/发布招领 + 六项必填 + 选填图片 + 确认发布） ============ -->
+      <section id="view-publish" class="view" data-view="publish" hidden>
+        <div class="screen-bar">
+          <button type="button" class="back" data-action="back"><span aria-hidden="true">&lt;</span> 返回</button>
+          <h2 class="screen-title">发布信息</h2>
+        </div>
+
+        <p class="field-label">信息类型：</p>
+        <div id="publish-type-tabs" class="type-switch" role="group" aria-label="选择信息类型">
+          <button type="button" class="active" data-type="lost" aria-pressed="true">发布寻物</button>
+          <button type="button" data-type="found" aria-pressed="false">发布招领</button>
+        </div>
+
+        <form id="publish-form" novalidate>
+          <label class="field-label" for="publish-name">物品名称*</label>
+          <input id="publish-name" class="input" type="text" maxlength="30" placeholder="请输入物品名称">
+          <p class="field-error" data-error-for="name"></p>
+
+          <label class="field-label" for="publish-category">物品分类*</label>
+          <select id="publish-category" class="input input--select">
+            <option value="">请选择分类</option>
+            <option value="校园卡">校园卡</option>
+            <option value="钥匙">钥匙</option>
+            <option value="电子产品">电子产品</option>
+            <option value="书籍">书籍</option>
+            <option value="生活用品">生活用品</option>
+            <option value="其他">其他</option>
+          </select>
+          <p class="field-error" data-error-for="category"></p>
+
+          <label class="field-label" for="publish-location">地点*</label>
+          <input id="publish-location" class="input" type="text" maxlength="40" placeholder="请输入丢失或拾取地点">
+          <p class="field-error" data-error-for="location"></p>
+
+          <label class="field-label" for="publish-date">日期*</label>
+          <input id="publish-date" class="input" type="date">
+          <p class="field-error" data-error-for="date"></p>
+
+          <label class="field-label" for="publish-description">物品描述*</label>
+          <textarea id="publish-description" class="input" rows="2" maxlength="200" placeholder="请填写物品特征"></textarea>
+          <p class="field-error" data-error-for="description"></p>
+
+          <label class="field-label" for="publish-contact">联系方式*</label>
+          <input id="publish-contact" class="input" type="text" maxlength="40" placeholder="请输入QQ或手机号">
+          <p class="field-error" data-error-for="contact"></p>
+
+          <p class="field-label" id="publish-image-label">物品图片</p>
+          <label class="upload-box" for="publish-image">
+            <span id="upload-box-text">上传图片</span>
+          </label>
+          <input id="publish-image" class="sr-only" type="file" accept="image/*">
+          <img id="publish-image-preview" class="publish-preview" alt="已选择的物品图片" hidden>
+          <p class="field-error" data-error-for="image"></p>
+
+          <p id="publish-form-error" class="form-error" role="alert" hidden></p>
+
+          <button type="submit" class="btn btn-primary btn-block">确认发布</button>
+        </form>
+      </section>
+
+      <!-- ============ 视图：06-发布成功页（对勾 + 发布成功 + 说明 + 返回首页 / 查看我的发布） ============ -->
+      <section id="view-success" class="view view--success" data-view="success" hidden>
+        <p class="success-icon" aria-hidden="true">✓</p>
+        <h2 class="success-title">发布成功</h2>
+        <p class="success-text">你的信息已经发布，<br>其他同学可以在首页和搜索结果中看到。</p>
+        <button type="button" class="btn btn-primary btn-block" data-goto="home">返回首页</button>
+        <button type="button" class="btn btn-soft btn-block" data-goto="mine">查看我的发布</button>
+      </section>
+
+      <!-- ============ 视图：07-我的发布页（标题 + 我的卡片 + 查看详情 / 标记为已找回·已归还） ============ -->
+      <section id="view-mine" class="view" data-view="mine" hidden>
+        <h1 class="page-title page-title--mine">我的发布</h1>
+        <div id="my-list" class="card-list"></div>
       </section>
     </main>
 
-    <section
-      id="detail-modal"
-      class="detail-modal"
-      aria-hidden="true"
-      hidden
-    >
-      <div
-        class="detail-panel"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="detail-title"
-      >
-        <button
-          id="close-detail"
-          class="close-detail"
-          type="button"
-          aria-label="关闭详情"
-        >
-          ×
-        </button>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
-        <div class="card-header">
-          <span id="detail-type" class="type-tag"></span>
-          <span id="detail-status" class="status"></span>
-        </div>
-
-        <h2 id="detail-title"></h2>
-
-        <div class="detail-content">
-          <p><strong>分类：</strong><span id="detail-category"></span></p>
-          <p><strong>地点：</strong><span id="detail-location"></span></p>
-          <p><strong>日期：</strong><span id="detail-date"></span></p>
-          <p><strong>详细描述：</strong></p>
-          <p id="detail-description" class="description"></p>
-          <p><strong>联系方式：</strong><span id="detail-contact"></span></p>
-        </div>
-      </div>
-    </section>
-
-    <nav class="bottom-nav">
-      <button class="active">首页</button>
-      <button>发布</button>
-      <button>我的</button>
+    <nav id="bottom-nav" class="bottom-nav">
+      <button type="button" class="active" data-goto="home">首页</button>
+      <button type="button" data-goto="publish">发布</button>
+      <button type="button" data-goto="mine">我的</button>
     </nav>
   </div>
 
   <script src="js/data.js"></script>
   <script src="js/storage.js"></script>
+  <script src="js/logic.js"></script>
+  <script src="js/render.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

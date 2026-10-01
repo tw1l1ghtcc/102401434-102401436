@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>单元测试 · 校园失物招领</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #f4f6f8;
+      color: #243047;
+      font-family: "Microsoft YaHei", sans-serif;
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgb(36 48 71 / 8%);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    #summary {
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      background: #f5f7fa;
+    }
+
+    #summary.pass {
+      color: #157046;
+      background: #f2fbf6;
+    }
+
+    #summary.fail {
+      color: #c0392b;
+      background: #fdecea;
+    }
+
+    ul {
+      padding-left: 0;
+      list-style: none;
+    }
+
+    li {
+      padding: 8px 10px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      background: #f5f7fa;
+      font-size: 14px;
+    }
+
+    li.pass::before {
+      content: "✓ ";
+      color: #157046;
+    }
+
+    li.fail::before {
+      content: "✗ ";
+      color: #c0392b;
+    }
+
+    li.fail {
+      background: #fdecea;
+    }
+
+    li small {
+      display: block;
+      color: #626d80;
+    }
+
+    a {
+      color: #356fe5;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>校园失物招领 —— 逻辑单元测试</h1>
+    <p>
+      这个页面直接加载 <code>js/data.js</code>、<code>js/logic.js</code> 和 <code>tests/cases.js</code>，
+      在浏览器里跑同一批用例（命令行版本：<code>node tests/run-tests.js</code>）。
+    </p>
+    <p id="summary">正在运行…</p>
+    <ul id="results"></ul>
+    <p><a href="../index.html">← 返回首页</a></p>
+  </main>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/logic.js"></script>
+  <script src="cases.js"></script>
+  <script>
+    (function () {
+      const list = window.__TEST_CASES__ || [];
+      const results = document.getElementById("results");
+      const summary = document.getElementById("summary");
+      let passed = 0;
+
+      list.forEach(function (testCase) {
+        const row = document.createElement("li");
+        row.className = "pass";
+        row.textContent = testCase.name;
+
+        try {
+          testCase.run();
+          passed += 1;
+        } catch (error) {
+          row.className = "fail";
+          const detail = document.createElement("small");
+          detail.textContent = error && error.message ? error.message : String(error);
+          row.appendChild(detail);
+        }
+
+        results.appendChild(row);
+      });
+
+      summary.textContent = "共 " + list.length + " 条用例，通过 " + passed + " 条" +
+        (passed === list.length ? "（全部通过）" : "，有 " + (list.length - passed) + " 条失败");
+      summary.className = passed === list.length ? "pass" : "fail";
+    })();
+  </script>
+</body>
+</html>
