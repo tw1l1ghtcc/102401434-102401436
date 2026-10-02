@@ -34,6 +34,8 @@
 - 使用浏览器本地存储保存数据
 - 兼容旧版本地存储数据
 - 表单输入校验及错误提示
+- 选择、预览和保存物品图片（不超过 2MB）
+- 一键复制联系方式
 - 页面切换和弹窗交互动画
 - 移动端页面布局适配
 
@@ -211,10 +213,10 @@
 ```powershell
 git clone https://github.com/tw1l1ghtcc/102401434-102401436.git
 Set-Location "102401434-102401436"
-Start-Process .\index.html
+Start-Process chrome.exe -ArgumentList ([System.Uri](Join-Path (Get-Location).Path 'index.html')).AbsoluteUri
 ```
 
-也可以下载项目后，在文件资源管理器中双击 `index.html`。
+请统一使用 Google Chrome 开发和测试。也可以打开 Chrome，按 Ctrl+O，选择项目根目录的 `index.html`。如果上述命令找不到 chrome.exe，请使用 Ctrl+O 的方式打开。网页功能不需要安装 Node.js；只有运行自动化测试时才需要 Node.js。
 
 ### 基本操作
 
@@ -312,6 +314,14 @@ npm.cmd test -- --runInBand
 
 ## 附加特点
 
+### 一键复制联系方式
+
+物品详情页提供“复制联系方式”按钮，减少手动输入。优先使用浏览器剪贴板接口，并提供兼容方式；复制失败时显示手动记录提示。
+
+### 图片选择与预览
+
+发布信息时可以选择物品图片，校验图片类型和 2MB 大小限制，并在提交前预览。图片通过 FileReader 转为 Data URL，与物品信息一起保存在当前浏览器的 localStorage 中，不上传到服务器。
+
 ### 浏览器本地持久化
 
 项目不依赖后端服务器，通过 `localStorage` 保存用户发布的信息和状态变化，使纯静态网页也具备基础的数据持久化能力。
@@ -369,6 +379,7 @@ npm.cmd test -- --runInBand
 - PR #7：补充 PSP 实际耗时和项目总结
 - PR #8：增加页面交互动画效果
 - PR #9：补充功能截图、测试结果、流程图和演示动图
+- PR #10：完善项目展示和最终使用说明
 
 ### 提交记录
 
@@ -415,7 +426,6 @@ npm.cmd test -- --runInBand
 - 用户注册和实名认证
 - 不同设备之间的数据同步
 - 即时聊天
-- 图片上传
 - 地图定位
 - 管理员审核
 

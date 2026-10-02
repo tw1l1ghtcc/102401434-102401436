@@ -90,8 +90,8 @@ node tests/run-tests.js
 
 ```powershell
 Set-Location .\unit-tests
-npm install
-npm test -- --runInBand
+npm.cmd install
+npm.cmd test -- --runInBand
 ```
 
 测试文件及结果：
@@ -110,6 +110,10 @@ Test Suites: 4 passed, 4 total
 Tests: 67 passed, 67 total
 ```
 
+
+说明：67 项 Jest 测试中，58 项针对正式应用，9 项针对尚未接入网页的独立模拟提交模块 api.js。Mock API 测试不代表正式网页具备后台服务。
+
+浏览器验收应统一使用 Google Chrome。原有手动验收记录保留；Chrome 首页已确认可以打开，其余操作仍需在 Chrome 中逐项复核。
 ### 4.3 JavaScript语法检查
 
 对项目脚本和测试脚本执行语法检查，检查的11个JavaScript文件均未发现语法错误。
